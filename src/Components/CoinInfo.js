@@ -11,6 +11,7 @@ import { Line } from "react-chartjs-2";
 import { HistoricalChart } from "../config/api";
 import { chartDays } from "../config/data";
 import { CryptoState } from "../CryptoContext";
+import { getHistoricalChart } from "../redux/services/coin.service";
 import SelectButton from "./SelectButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +36,7 @@ function CoinInfo({ coin }) {
   const [days, setDays] = useState(1);
   const { currency, symbol } = CryptoState();
   const fetchHistoricData = async () => {
-    const { data } = await axios.get(HistoricalChart(coin.id, days, currency));
+    const { data } = await getHistoricalChart(coin.id, days, currency)
     setHistoricData(data.prices);
   };
   // console.log(historicData);

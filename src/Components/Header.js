@@ -17,9 +17,12 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CryptoState } from "../CryptoContext";
+// import { CryptoState } from "../CryptoContext";
+import { useSelector, useDispatch } from "react-redux/es/exports";
+import { setCoinss, setCurrency } from "../redux/actions/coinAction";
+import { getAllCoin } from "../redux/services/coin.service";
 const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
@@ -47,12 +50,12 @@ function getModalStyle() {
   };
 }
 const Header = () => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const navigate = useNavigate();
-  const { currency, setCurrency } = CryptoState();
+  const currency = useSelector((state) => state.currency);
   const [open, setOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
-  console.log(modalStyle);
   const darkTheme = createTheme({
     palette: {
       primary: {
@@ -61,6 +64,15 @@ const Header = () => {
       type: "dark",
     },
   });
+  async function loadData() {
+    const { data } = await getAllCoin(currency.Currency);
+    dispatch(setCoinss(data));
+  }
+  useEffect(() => {
+    // eslint-disable-next-line
+    loadData();
+    // eslint-disable-next-line
+  }, []);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -115,11 +127,16 @@ const Header = () => {
             <Select
               variant="outlined"
               style={{ width: 100, height: 40, marginLeft: 15 }}
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
+              value={currency.Currency}
+              onChange={async (e) => {
+                console.log(e.target.value, ".............");
+                dispatch(setCurrency(e.target.value));
+                const { data } = await getAllCoin(e.target.value);
+                dispatch(setCoinss(data));
+              }}
             >
-              <MenuItem value={"USD"}>USD</MenuItem>
-              <MenuItem value={"INR"}>INR</MenuItem>
+              <MenuItem value="USD">USD</MenuItem>
+              <MenuItem value="INR">INR</MenuItem>
             </Select>
             <Button
               variant="outlined"

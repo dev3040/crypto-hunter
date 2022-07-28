@@ -6,6 +6,9 @@ import CoinInfo from "../Components/CoinInfo";
 import { SingleCoin } from "../config/api";
 import { numberWithCommas } from "../config/utils";
 import { CryptoState } from "../CryptoContext";
+import { useDispatch, useSelector } from "react-redux";
+import { getCoin } from "../redux/services/coin.service";
+import { selectedCoin } from "../redux/actions/coinAction";
 const parse = require("html-react-parser");
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,19 +62,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function Coinpage() {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { id } = useParams();
-  const [coin, setCoin] = useState();
+  const coin = useSelector((state)=>state.coin);
   const { currency, symbol } = CryptoState();
+  const fetchCoins = async () => {
+    const { data } = await getCoin(id);
+    dispatch(selectedCoin(data))
+  };
   useEffect(() => {
     // eslint-disable-next-line
-    const fetchCoins = async () => {
-      const { data } = await axios.get(SingleCoin(id));
-      setCoin(data);
-    };
     fetchCoins();
   }, []);
-  if (!coin) return <LinearProgress style={{ backgroundColor: "gold" }} />;
+  if (!coin.id) return <LinearProgress style={{ backgroundColor: "gold" }} />;
+  else
   return (
     <div className={classes.container}>
       <div className={classes.sidebar}>

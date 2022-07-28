@@ -14,12 +14,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CoinList } from "../config/api";
 import { numberWithCommas } from "../config/utils";
-import { CryptoState } from "../CryptoContext";
+// import { CryptoState } from "../CryptoContext";
+// import { getAllCoin } from "../redux/services/coin.service";
+// import { setCoinss } from "../redux/actions/coinAction";
+import { useSelector } from "react-redux";
 const useStyles = makeStyles(() => ({
   row: {
     backgroundColor: "#16171a",
@@ -36,18 +37,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 const CoinTable = () => {
-  const [coins, setCoins] = useState([]);
+  const coins = useSelector((state) => state.allCoins.coins);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const { currency, symbol } = CryptoState();
+  // const {  symbol } = CryptoState();
+  var currency = useSelector((state) => state.currency);
+  const symbol = currency.Symbol;
   const [page, setPage] = useState(1);
+  // const dispatch = useDispatch();
   const fetchCoins = async () => {
     setLoading(true);
-    const { data } = await axios.get(CoinList(currency));
     setLoading(false);
-    setCoins(data);
   };
   useEffect(() => {
+    // eslint-disable-next-line
     fetchCoins();
   }, []);
 
@@ -112,7 +115,9 @@ const CoinTable = () => {
                     const profit = row.price_change_percentage_24h > 0;
                     return (
                       <TableRow
-                        onClick={() => navigate(`/coins/${row.id}`)}
+                        onClick={() => {
+                          navigate(`/coins/${row.id}`);
+                        }}
                         key={row.name}
                         className={classes.row}
                       >
