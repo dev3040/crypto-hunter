@@ -4,11 +4,11 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core";
-import { borderColor } from "@mui/system";
-import axios from "axios";
+// import { borderColor } from "@mui/system";
+// import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { HistoricalChart } from "../config/api";
+// import { HistoricalChart } from "../config/api";
 import { chartDays } from "../config/data";
 import { CryptoState } from "../CryptoContext";
 import { getHistoricalChart } from "../redux/services/coin.service";
@@ -34,15 +34,16 @@ const useStyles = makeStyles((theme) => ({
 function CoinInfo({ coin }) {
   const [historicData, setHistoricData] = useState();
   const [days, setDays] = useState(1);
-  const { currency, symbol } = CryptoState();
+  const { currency } = CryptoState();
   const fetchHistoricData = async () => {
-    const { data } = await getHistoricalChart(coin.id, days, currency)
+    const { data } = await getHistoricalChart(coin.id, days, currency);
     setHistoricData(data.prices);
   };
   // console.log(historicData);
   useEffect(() => {
     // eslint-disable-next-line
     fetchHistoricData();
+    // eslint-disable-next-line
   }, [currency, days]);
 
   const classes = useStyles();

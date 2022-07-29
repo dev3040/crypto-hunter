@@ -21,8 +21,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { CryptoState } from "../CryptoContext";
 import { useSelector, useDispatch } from "react-redux/es/exports";
-import { setCoinss, setCurrency } from "../redux/actions/coinAction";
-import { getAllCoin } from "../redux/services/coin.service";
+import { setCoinss, setCurrency, trendingCoins } from "../redux/actions/coinAction";
+import { getAllCoin, getTrendingCoins } from "../redux/services/coin.service";
 const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
@@ -66,7 +66,10 @@ const Header = () => {
   });
   async function loadData() {
     const { data } = await getAllCoin(currency.Currency);
+    const trendingC = await getTrendingCoins(currency.Currency);
+    console.log(trendingC,"///////////");
     dispatch(setCoinss(data));
+    dispatch(trendingCoins(trendingC.data))
   }
   useEffect(() => {
     // eslint-disable-next-line
@@ -129,10 +132,11 @@ const Header = () => {
               style={{ width: 100, height: 40, marginLeft: 15 }}
               value={currency.Currency}
               onChange={async (e) => {
-                console.log(e.target.value, ".............");
                 dispatch(setCurrency(e.target.value));
                 const { data } = await getAllCoin(e.target.value);
                 dispatch(setCoinss(data));
+                const trendingC = await getTrendingCoins(e.target.value);
+                dispatch(trendingCoins(trendingC.data))
               }}
             >
               <MenuItem value="USD">USD</MenuItem>

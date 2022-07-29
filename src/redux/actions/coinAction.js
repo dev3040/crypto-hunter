@@ -20,3 +20,17 @@ export const setCurrency = (currency) => {
     payload: currency,
   };
 };
+
+export const trendingCoins = (currency) => {
+  return {
+    type: ActionTypes.SET_TRENDING_COINS,
+    payload: currency,
+  };
+};
+
+export const setHistoricalData = (data) => {
+  return {
+    type: ActionTypes.SET_TRENDING_COINS,
+    payload: data,
+  };
+};

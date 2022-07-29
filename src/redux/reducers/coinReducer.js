@@ -38,3 +38,21 @@ export const currency = (
       return state;
   }
 };
+
+export const trendingCoins = (state = [], { type, payload }) => {
+  switch (type) {
+    case ActionTypes.SET_TRENDING_COINS:
+      return { ...state, coins: payload };
+    default:
+      return state;
+  }
+};
+
+export const historicDataReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case ActionTypes.SET_HISTORICAL_DATA:
+      return {...state,data:payload}
+    default:
+      return state;
+  }
+};
