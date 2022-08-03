@@ -4,15 +4,13 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core";
-// import { borderColor } from "@mui/system";
-// import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-// import { HistoricalChart } from "../config/api";
+import { useDispatch,useSelector } from "react-redux";
 import { chartDays } from "../config/data";
-import { CryptoState } from "../CryptoContext";
 import { getHistoricalChart } from "../redux/services/coin.service";
 import SelectButton from "./SelectButton";
+import { setHistoricalData } from "../redux/actions/coinAction";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,12 +30,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function CoinInfo({ coin }) {
-  const [historicData, setHistoricData] = useState();
+  const dispatch = useDispatch();
+  const historicData = useSelector((state) => state.historicData.data);
+  console.log(historicData,"---");
+  const currency = useSelector((state) => state.currency.Currency);
   const [days, setDays] = useState(1);
-  const { currency } = CryptoState();
+  // const { currency } = CryptoState();
   const fetchHistoricData = async () => {
     const { data } = await getHistoricalChart(coin.id, days, currency);
-    setHistoricData(data.prices);
+    dispatch(setHistoricalData(data));
   };
   // console.log(historicData);
   useEffect(() => {
@@ -58,7 +59,7 @@ function CoinInfo({ coin }) {
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
-        {!historicData ? (
+        {!historicData?.market_caps ? (
           <CircularProgress
             style={{ color: "gold" }}
             size={250}
@@ -68,7 +69,7 @@ function CoinInfo({ coin }) {
           <>
             <Line
               data={{
-                labels: historicData.map((coin) => {
+                labels: historicData?.market_caps.map((coin) => {
                   let date = new Date(coin[0]);
                   let time =
                     date.getHours() > 12
@@ -78,7 +79,7 @@ function CoinInfo({ coin }) {
                 }),
                 datasets: [
                   {
-                    data: historicData.map((coin) => coin[1]),
+                    data: historicData?.market_caps.map((coin) => coin[1]),
                     label: `Price (Past ${days} Days) in ${currency}`,
                     borderColor: "#EEBC1D",
                   },

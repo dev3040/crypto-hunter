@@ -17,9 +17,6 @@ import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { numberWithCommas } from "../config/utils";
-// import { CryptoState } from "../CryptoContext";
-// import { getAllCoin } from "../redux/services/coin.service";
-// import { setCoinss } from "../redux/actions/coinAction";
 import { useSelector } from "react-redux";
 const useStyles = makeStyles(() => ({
   row: {

@@ -30,7 +30,7 @@ export const trendingCoins = (currency) => {
 
 export const setHistoricalData = (data) => {
   return {
-    type: ActionTypes.SET_TRENDING_COINS,
+    type: ActionTypes.SET_HISTORICAL_DATA,
     payload: data,
   };
 };

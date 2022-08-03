@@ -19,7 +19,6 @@ import {
 } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { CryptoState } from "../CryptoContext";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { setCoinss, setCurrency, trendingCoins } from "../redux/actions/coinAction";
 import { getAllCoin, getTrendingCoins } from "../redux/services/coin.service";
@@ -67,7 +66,6 @@ const Header = () => {
   async function loadData() {
     const { data } = await getAllCoin(currency.Currency);
     const trendingC = await getTrendingCoins(currency.Currency);
-    console.log(trendingC,"///////////");
     dispatch(setCoinss(data));
     dispatch(trendingCoins(trendingC.data))
   }
